@@ -1,0 +1,9 @@
+C:\Users\Hp\OneDrive\Desktop\c# project\InventoryTaskManager\obj\Release\net8.0\InventoryTaskManager.csproj.AssemblyReference.cache
+C:\Users\Hp\OneDrive\Desktop\c# project\InventoryTaskManager\obj\Release\net8.0\InventoryTaskManager.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Hp\OneDrive\Desktop\c# project\InventoryTaskManager\obj\Release\net8.0\InventoryTaskManager.AssemblyInfoInputs.cache
+C:\Users\Hp\OneDrive\Desktop\c# project\InventoryTaskManager\obj\Release\net8.0\InventoryTaskManager.AssemblyInfo.cs
+C:\Users\Hp\OneDrive\Desktop\c# project\InventoryTaskManager\obj\Release\net8.0\InventoryTaskManager.csproj.CoreCompileInputs.cache
+C:\Users\Hp\OneDrive\Desktop\c# project\InventoryTaskManager\obj\Release\net8.0\InventoryTaskManager.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Hp\OneDrive\Desktop\c# project\InventoryTaskManager\obj\Release\net8.0\InventoryTaskManager.RazorAssemblyInfo.cache
+C:\Users\Hp\OneDrive\Desktop\c# project\InventoryTaskManager\obj\Release\net8.0\InventoryTaskManager.RazorAssemblyInfo.cs
+C:\Users\Hp\OneDrive\Desktop\c# project\InventoryTaskManager\obj\Release\net8.0\InventoryTaskManager.sourcelink.json
