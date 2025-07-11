@@ -233,10 +233,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Icons from Font Awesome
 - Indian retail context and pricing
 
-## 📞 Support
 
-For support, please open an issue in the GitHub repository or contact the development team.
-
----
-
-**Made with ❤️ for Indian retail businesses**
