@@ -1,0 +1,262 @@
+@model InventoryTaskManager.Models.Product
+
+@{
+    ViewData["Title"] = "Edit Product";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Edit Product</h2>
+                <div>
+                    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-info">
+                        <i class="fas fa-eye"></i> View Details
+                    </a>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                Edit Product Information
+                                @if (Model.IsLowStock)
+                                {
+                                    <span class="badge bg-danger ms-2">Low Stock</span>
+                                }
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <form asp-action="Edit">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                
+                                <input type="hidden" asp-for="Id" />
+                                <input type="hidden" asp-for="CreatedDate" />
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label asp-for="Name" class="form-label"></label>
+                                            <input asp-for="Name" class="form-control" placeholder="Enter product name" />
+                                            <span asp-validation-for="Name" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label asp-for="CategoryId" class="form-label">Category</label>
+                                            <select asp-for="CategoryId" class="form-select" asp-items="ViewBag.CategoryId">
+                                                <option value="">-- Select Category --</option>
+                                            </select>
+                                            <span asp-validation-for="CategoryId" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label asp-for="Description" class="form-label"></label>
+                                    <textarea asp-for="Description" class="form-control" rows="3" placeholder="Enter product description (optional)"></textarea>
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label asp-for="SKU" class="form-label"></label>
+                                            <input asp-for="SKU" class="form-control" placeholder="Enter SKU (optional)" />
+                                            <span asp-validation-for="SKU" class="text-danger"></span>
+                                            <div class="form-text">Stock Keeping Unit - unique identifier for the product</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label asp-for="Price" class="form-label"></label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">$</span>
+                                                <input asp-for="Price" class="form-control" placeholder="0.00" step="0.01" />
+                                                <div class="form-text">Enter price in INR (₹)</div>
+                                            </div>
+                                            <span asp-validation-for="Price" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label asp-for="Quantity" class="form-label"></label>
+                                            <input asp-for="Quantity" class="form-control" placeholder="Enter current quantity" />
+                                            <span asp-validation-for="Quantity" class="text-danger"></span>
+                                            @if (Model.IsLowStock)
+                                            {
+                                                <div class="form-text text-danger">
+                                                    <i class="fas fa-exclamation-triangle"></i> 
+                                                    Current quantity is below minimum stock level (@Model.MinStockLevel)
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label asp-for="MinStockLevel" class="form-label"></label>
+                                            <input asp-for="MinStockLevel" class="form-control" />
+                                            <span asp-validation-for="MinStockLevel" class="text-danger"></span>
+                                            <div class="form-text">Alert will be triggered when stock falls below this level</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group mt-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> Save Changes
+                                    </button>
+                                    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-info ms-2">
+                                        <i class="fas fa-eye"></i> View Details
+                                    </a>
+                                    <a asp-action="Index" class="btn btn-secondary ms-2">
+                                        <i class="fas fa-times"></i> Cancel
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">Current Product Stats</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <div class="border-end">
+                                        <div class="fs-4 text-primary">@Model.Quantity</div>
+                                        <small class="text-muted">Current Stock</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="fs-4 text-success">₹@Model.StockValue.ToString("N2")</div>
+                                    <small class="text-muted">Stock Value</small>
+                                </div>
+                            </div>
+                            
+                            <hr>
+                            
+                            <div class="mb-3">
+                                <small class="text-muted">Stock Level Status</small>
+                                @if (Model.IsLowStock)
+                                {
+                                    <div class="alert alert-warning mt-2" role="alert">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <strong>Low Stock Alert!</strong><br>
+                                        Current quantity (@Model.Quantity) is below minimum level (@Model.MinStockLevel)
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="alert alert-success mt-2" role="alert">
+                                        <i class="fas fa-check-circle"></i>
+                                        <strong>Stock Level OK</strong><br>
+                                        Sufficient inventory available
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">Record Information</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-2">
+                                <div class="col-sm-5">
+                                    <small class="text-muted">Created:</small>
+                                </div>
+                                <div class="col-sm-7">
+                                    <small>@Model.CreatedDate.ToString("MMM dd, yyyy")</small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <small class="text-muted">Last Updated:</small>
+                                </div>
+                                <div class="col-sm-7">
+                                    <small>@Model.UpdatedDate.ToString("MMM dd, yyyy")</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">Quick Stock Actions</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-outline-success btn-sm w-100" onclick="adjustQuantity(10)">
+                                        <i class="fas fa-plus"></i> +10
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-outline-danger btn-sm w-100" onclick="adjustQuantity(-10)">
+                                        <i class="fas fa-minus"></i> -10
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-outline-success btn-sm w-100" onclick="adjustQuantity(50)">
+                                        <i class="fas fa-plus"></i> +50
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-outline-danger btn-sm w-100" onclick="adjustQuantity(-50)">
+                                        <i class="fas fa-minus"></i> -50
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        // Quick quantity adjustment
+        function adjustQuantity(amount) {
+            var quantityField = $('#Quantity');
+            var currentValue = parseInt(quantityField.val()) || 0;
+            var newValue = Math.max(0, currentValue + amount);
+            quantityField.val(newValue);
+            
+            // Update the display
+            updateStockDisplay();
+        }
+
+        // Update stock value display
+        function updateStockDisplay() {
+            var price = parseFloat($('#Price').val()) || 0;
+            var quantity = parseInt($('#Quantity').val()) || 0;
+            var stockValue = price * quantity;
+            
+            // Update any dynamic displays if needed
+        }
+
+        // Monitor form changes
+        $('#Price, #Quantity').on('input', function() {
+            updateStockDisplay();
+        });
+    </script>
+}

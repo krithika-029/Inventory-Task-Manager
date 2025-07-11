@@ -1,0 +1,258 @@
+@model InventoryTaskManager.Models.Category
+
+@{
+    ViewData["Title"] = "Category Details";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Category Details</h2>
+                <div>
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Categories
+                    </a>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">@Model.Name</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <strong>Category Name:</strong>
+                                </div>
+                                <div class="col-sm-9">
+                                    @Model.Name
+                                </div>
+                            </div>
+                            <hr>
+                            
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <strong>Description:</strong>
+                                </div>
+                                <div class="col-sm-9">
+                                    @if (!string.IsNullOrEmpty(Model.Description))
+                                    {
+                                        @Model.Description
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No description available</span>
+                                    }
+                                </div>
+                            </div>
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <strong>Total Products:</strong>
+                                </div>
+                                <div class="col-sm-9">
+                                    <span class="badge bg-info fs-6">@Model.Products.Count products</span>
+                                </div>
+                            </div>
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <strong>Total Inventory Value:</strong>
+                                </div>
+                                <div class="col-sm-9">
+                                    <span class="fs-5 text-success fw-bold">@Model.Products.Sum(p => p.StockValue).ToString("C")</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (Model.Products.Any())
+                    {
+                        <div class="card mt-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h6 class="card-title mb-0">Products in this Category</h6>
+                                <a asp-controller="Product" asp-action="Create" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-plus"></i> Add Product
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Product Name</th>
+                                                <th>SKU</th>
+                                                <th>Quantity</th>
+                                                <th>Price</th>
+                                                <th>Stock Value</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var product in Model.Products.OrderBy(p => p.Name))
+                                            {
+                                                <tr class="@(product.IsLowStock ? "table-warning" : "")">
+                                                    <td>
+                                                        <strong>@product.Name</strong>
+                                                        @if (!string.IsNullOrEmpty(product.Description))
+                                                        {
+                                                            <br><small class="text-muted">@product.Description</small>
+                                                        }
+                                                    </td>
+                                                    <td><code>@product.SKU</code></td>
+                                                    <td>
+                                                        <span class="@(product.IsLowStock ? "text-danger fw-bold" : "")">
+                                                            @product.Quantity
+                                                        </span>
+                                                    </td>
+                                                    <td>@product.Price.ToString("C")</td>
+                                                    <td>@product.StockValue.ToString("C")</td>
+                                                    <td>
+                                                        @if (product.IsLowStock)
+                                                        {
+                                                            <span class="badge bg-danger">Low Stock</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge bg-success">In Stock</span>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group btn-group-sm" role="group">
+                                                            <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id" 
+                                                               class="btn btn-outline-info" title="View Details">
+                                                                <i class="fas fa-eye"></i>
+                                                            </a>
+                                                            <a asp-controller="Product" asp-action="Edit" asp-route-id="@product.Id" 
+                                                               class="btn btn-outline-primary" title="Edit">
+                                                                <i class="fas fa-edit"></i>
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="card mt-4">
+                            <div class="card-body text-center">
+                                <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">No products in this category</h5>
+                                <p class="text-muted">Start by adding your first product to this category.</p>
+                                <a asp-controller="Product" asp-action="Create" class="btn btn-primary">
+                                    <i class="fas fa-plus"></i> Add First Product
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">Category Statistics</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <div class="border-end">
+                                        <div class="fs-4 text-primary">@Model.Products.Count</div>
+                                        <small class="text-muted">Products</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="fs-4 text-success">@Model.Products.Sum(p => p.Quantity)</div>
+                                    <small class="text-muted">Total Units</small>
+                                </div>
+                            </div>
+                            
+                            <hr>
+                            
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <div class="border-end">
+                                        <div class="fs-5 text-info">@Model.Products.Count(p => p.IsLowStock)</div>
+                                        <small class="text-muted">Low Stock</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="fs-5 text-warning">@Model.Products.Count(p => !p.IsLowStock)</div>
+                                    <small class="text-muted">In Stock</small>
+                                </div>
+                            </div>
+
+                            @if (Model.Products.Any())
+                            {
+                                <hr>
+                                <div class="text-center">
+                                    <div class="fs-4 text-success">@Model.Products.Sum(p => p.StockValue).ToString("C")</div>
+                                    <small class="text-muted">Total Value</small>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">Record Information</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-2">
+                                <div class="col-sm-5">
+                                    <small class="text-muted">Created:</small>
+                                </div>
+                                <div class="col-sm-7">
+                                    <small>@Model.CreatedDate.ToString("MMM dd, yyyy")</small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <small class="text-muted">Last Updated:</small>
+                                </div>
+                                <div class="col-sm-7">
+                                    <small>@Model.UpdatedDate.ToString("MMM dd, yyyy")</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">Quick Actions</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">
+                                    <i class="fas fa-edit"></i> Edit Category
+                                </a>
+                                <a asp-action="Products" asp-route-id="@Model.Id" class="btn btn-outline-success">
+                                    <i class="fas fa-box"></i> View Products
+                                </a>
+                                <a asp-controller="Product" asp-action="Create" class="btn btn-outline-info">
+                                    <i class="fas fa-plus"></i> Add Product
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">
+                                    <i class="fas fa-trash"></i> Delete Category
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

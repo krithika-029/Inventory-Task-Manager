@@ -1,0 +1,128 @@
+@model InventoryTaskManager.Models.Category
+
+@{
+    ViewData["Title"] = "Create Category";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Create New Category</h2>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Categories
+                </a>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Category Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <form asp-action="Create">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                
+                                <div class="form-group mb-3">
+                                    <label asp-for="Name" class="form-label"></label>
+                                    <input asp-for="Name" class="form-control" placeholder="Enter category name" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label asp-for="Description" class="form-label"></label>
+                                    <textarea asp-for="Description" class="form-control" rows="4" placeholder="Enter category description (optional)"></textarea>
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group mt-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> Create Category
+                                    </button>
+                                    <a asp-action="Index" class="btn btn-secondary ms-2">
+                                        <i class="fas fa-times"></i> Cancel
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">Category Guidelines</h6>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="fas fa-info-circle text-info"></i>
+                                    <strong>Category Name:</strong> Choose a clear, descriptive name that represents the type of products
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-success"></i>
+                                    <strong>Unique Names:</strong> Each category must have a unique name
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-align-left text-primary"></i>
+                                    <strong>Description:</strong> Add details about what products belong in this category
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-tags text-warning"></i>
+                                    <strong>Organization:</strong> Well-organized categories help with inventory management
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">Category Examples</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-info" role="alert">
+                                <strong>Common Categories:</strong>
+                                <ul class="mt-2 mb-0">
+                                    <li>Electronics</li>
+                                    <li>Clothing & Apparel</li>
+                                    <li>Books & Media</li>
+                                    <li>Home & Garden</li>
+                                    <li>Sports & Recreation</li>
+                                    <li>Health & Beauty</li>
+                                    <li>Automotive</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">Next Steps</h6>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted">
+                                After creating your category, you can:
+                            </p>
+                            <ul class="list-unstyled">
+                                <li class="mb-1">
+                                    <i class="fas fa-plus text-success"></i> Add products to this category
+                                </li>
+                                <li class="mb-1">
+                                    <i class="fas fa-edit text-primary"></i> Edit category details anytime
+                                </li>
+                                <li class="mb-1">
+                                    <i class="fas fa-chart-bar text-info"></i> View category statistics
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

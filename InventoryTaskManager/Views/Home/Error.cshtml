@@ -1,0 +1,22 @@
+@{
+    ViewData["Title"] = "Error";
+}
+
+<h1 class="text-danger">Error.</h1>
+<h2 class="text-danger">An error occurred while processing your request.</h2>
+
+<div class="alert alert-danger" role="alert">
+    <h4 class="alert-heading">Something went wrong!</h4>
+    <p>We're sorry, but an error has occurred while processing your request. Please try again later.</p>
+    <hr>
+    <p class="mb-0">If this problem persists, please contact support.</p>
+</div>
+
+<div class="mt-3">
+    <a href="@Url.Action("Index", "Home")" class="btn btn-primary">
+        <i class="fas fa-home"></i> Go to Dashboard
+    </a>
+    <button onclick="history.back()" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Go Back
+    </button>
+</div>

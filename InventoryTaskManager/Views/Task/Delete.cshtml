@@ -1,0 +1,283 @@
+@model InventoryTaskManager.Models.TaskItem
+
+@{
+    ViewData["Title"] = "Delete Task";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="text-danger">Delete Task</h2>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Tasks
+                </a>
+            </div>
+
+            <div class="alert alert-danger" role="alert">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>Warning!</strong> Are you sure you want to delete this task? This action cannot be undone.
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header bg-danger text-white">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-trash"></i> Task to be Deleted
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <strong>Task Title:</strong>
+                                </div>
+                                <div class="col-sm-9">
+                                    @Model.Title
+                                </div>
+                            </div>
+                            <hr>
+                            
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <strong>Description:</strong>
+                                </div>
+                                <div class="col-sm-9">
+                                    @if (!string.IsNullOrEmpty(Model.Description))
+                                    {
+                                        @Model.Description
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No description</span>
+                                    }
+                                </div>
+                            </div>
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <strong>Status:</strong>
+                                </div>
+                                <div class="col-sm-9">
+                                    <span class="badge @Model.StatusClass">@Model.Status.ToString().Replace("InProgress", "In Progress")</span>
+@if (Model.Status == InventoryTaskManager.Models.TaskStatus.Completed && Model.CompletedDate.HasValue)
+                                    {
+                                        <br><small class="text-success">Completed on @Model.CompletedDate.Value.ToString("MMM dd, yyyy")</small>
+                                    }
+                                </div>
+                            </div>
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <strong>Priority:</strong>
+                                </div>
+                                <div class="col-sm-9">
+                                    <span class="badge @Model.PriorityClass">@Model.Priority</span>
+                                </div>
+                            </div>
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <strong>Due Date:</strong>
+                                </div>
+                                <div class="col-sm-9">
+                                    <span class="@(Model.IsOverdue ? "text-danger fw-bold" : Model.IsDueSoon ? "text-warning fw-bold" : "")">
+                                        @Model.DueDate.ToString("dddd, MMMM dd, yyyy")
+                                    </span>
+                                    @if (Model.IsOverdue)
+                                    {
+                                        <br><span class="badge bg-danger">Overdue by @Math.Abs(Model.DaysUntilDue) day(s)</span>
+                                    }
+                                    else if (Model.IsDueSoon)
+                                    {
+                                        <br><span class="badge bg-warning">Due in @Model.DaysUntilDue day(s)</span>
+                                    }
+                                </div>
+                            </div>
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <strong>Assigned To:</strong>
+                                </div>
+                                <div class="col-sm-9">
+                                    @if (!string.IsNullOrEmpty(Model.AssignedTo))
+                                    {
+                                        <span class="badge bg-secondary">@Model.AssignedTo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Unassigned</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header bg-warning text-dark">
+                            <h6 class="card-title mb-0">
+                                <i class="fas fa-info-circle"></i> Deletion Impact
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-warning" role="alert">
+                                <strong>What will happen:</strong>
+                                <ul class="mt-2 mb-0">
+                                    <li>Task will be permanently removed</li>
+                                    <li>All task data will be lost</li>
+                                    <li>Task history will be deleted</li>
+                                    <li>This action cannot be undone</li>
+                                </ul>
+                            </div>
+
+@if (Model.Status != InventoryTaskManager.Models.TaskStatus.Completed)
+                            {
+                                <div class="alert alert-info" role="alert">
+                                    <strong>Note:</strong> This task is not yet completed. 
+                                    Consider marking it as completed instead of deleting it to maintain records.
+                                </div>
+                            }
+
+                            @if (Model.IsOverdue)
+                            {
+                                <div class="alert alert-danger" role="alert">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <strong>Overdue Task:</strong> This task is currently overdue by @Math.Abs(Model.DaysUntilDue) day(s).
+                                </div>
+                            }
+                            else if (Model.IsDueSoon)
+                            {
+                                <div class="alert alert-warning" role="alert">
+                                    <i class="fas fa-clock"></i>
+                                    <strong>Due Soon:</strong> This task is due in @Model.DaysUntilDue day(s).
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">Task Statistics</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <div class="border-end">
+<div class="fs-4 @(Model.Priority == InventoryTaskManager.Models.TaskPriority.Critical ? "text-danger" : Model.Priority == InventoryTaskManager.Models.TaskPriority.High ? "text-warning" : "text-info")">
+                                            @Model.Priority
+                                        </div>
+                                        <small class="text-muted">Priority</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="fs-4 @(Model.IsOverdue ? "text-danger" : Model.IsDueSoon ? "text-warning" : "text-success")">
+                                        @Math.Abs(Model.DaysUntilDue)
+                                    </div>
+                                    <small class="text-muted">Days @(Model.IsOverdue ? "Overdue" : "Until Due")</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">Record Information</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-2">
+                                <div class="col-sm-5">
+                                    <small class="text-muted">Created:</small>
+                                </div>
+                                <div class="col-sm-7">
+                                    <small>@Model.CreatedDate.ToString("MMM dd, yyyy")</small>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-sm-5">
+                                    <small class="text-muted">Last Updated:</small>
+                                </div>
+                                <div class="col-sm-7">
+                                    <small>@Model.UpdatedDate.ToString("MMM dd, yyyy")</small>
+                                </div>
+                            </div>
+                            @if (Model.CompletedDate.HasValue)
+                            {
+                                <div class="row mb-2">
+                                    <div class="col-sm-5">
+                                        <small class="text-muted">Completed:</small>
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <small class="text-success">@Model.CompletedDate.Value.ToString("MMM dd, yyyy")</small>
+                                    </div>
+                                </div>
+                            }
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <small class="text-muted">Task ID:</small>
+                                </div>
+                                <div class="col-sm-7">
+                                    <small><code>@Model.Id</code></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form asp-action="Delete">
+                                <input type="hidden" asp-for="Id" />
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="confirmDeletion" required>
+                                            <label class="form-check-label" for="confirmDeletion">
+                                                I understand that this action cannot be undone and confirm that I want to permanently delete this task.
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 text-end">
+                                        <button type="submit" class="btn btn-danger" id="deleteButton" disabled>
+                                            <i class="fas fa-trash"></i> Delete Task
+                                        </button>
+                                        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-info ms-2">
+                                            <i class="fas fa-eye"></i> View Details
+                                        </a>
+                                        <a asp-action="Index" class="btn btn-secondary ms-2">
+                                            <i class="fas fa-times"></i> Cancel
+                                        </a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Enable/disable delete button based on confirmation checkbox
+        document.getElementById('confirmDeletion').addEventListener('change', function() {
+            document.getElementById('deleteButton').disabled = !this.checked;
+        });
+
+        // Add confirmation dialog
+        document.querySelector('form').addEventListener('submit', function(e) {
+            if (!confirm('Are you absolutely sure you want to delete this task? This action cannot be undone.')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+}

@@ -1,0 +1,162 @@
+@model IEnumerable<InventoryTaskManager.Models.Category>
+
+@{
+    ViewData["Title"] = "Categories";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Product Categories</h2>
+                <div>
+                    <a asp-action="Create" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add New Category
+                    </a>
+                    <a asp-controller="Product" asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-box"></i> View Products
+                    </a>
+                </div>
+            </div>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <div class="card">
+                <div class="card-body">
+                    @if (Model.Any())
+                    {
+                        <div class="row">
+                            @foreach (var category in Model)
+                            {
+                                <div class="col-md-6 col-lg-4 mb-4">
+                                    <div class="card hover-shadow">
+                                        <div class="card-header d-flex justify-content-between align-items-center">
+                                            <h5 class="card-title mb-0">@category.Name</h5>
+                                            <span class="badge bg-info">@category.Products.Count products</span>
+                                        </div>
+                                        <div class="card-body">
+                                            @if (!string.IsNullOrEmpty(category.Description))
+                                            {
+                                                <p class="card-text">@category.Description</p>
+                                            }
+                                            else
+                                            {
+                                                <p class="card-text text-muted">No description available</p>
+                                            }
+                                            
+                                            <div class="row text-center mt-3">
+                                                <div class="col-6">
+                                                    <div class="border-end">
+                                                        <div class="fs-5 text-primary">@category.Products.Count</div>
+                                                        <small class="text-muted">Products</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="fs-5 text-success">@category.Products.Sum(p => p.StockValue).ToString("C")</div>
+                                                    <small class="text-muted">Total Value</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <small class="text-muted">Created: @category.CreatedDate.ToString("MMM dd, yyyy")</small>
+                                                </div>
+                                                <div class="col-6 text-end">
+                                                    <div class="btn-group btn-group-sm" role="group">
+                                                        <a asp-action="Details" asp-route-id="@category.Id" 
+                                                           class="btn btn-outline-info" title="View Details">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                        <a asp-action="Products" asp-route-id="@category.Id" 
+                                                           class="btn btn-outline-success" title="View Products">
+                                                            <i class="fas fa-box"></i>
+                                                        </a>
+                                                        <a asp-action="Edit" asp-route-id="@category.Id" 
+                                                           class="btn btn-outline-primary" title="Edit">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <a asp-action="Delete" asp-route-id="@category.Id" 
+                                                           class="btn btn-outline-danger" title="Delete">
+                                                            <i class="fas fa-trash"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Summary</h6>
+                                        <p class="card-text">
+                                            <strong>Total Categories:</strong> @Model.Count()<br>
+                                            <strong>Total Products:</strong> @Model.Sum(c => c.Products.Count)<br>
+                                            <strong>Total Inventory Value:</strong> @Model.Sum(c => c.Products.Sum(p => p.StockValue)).ToString("C")
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Top Categories</h6>
+                                        @{
+                                            var topCategories = Model.OrderByDescending(c => c.Products.Count).Take(3);
+                                        }
+                                        @foreach (var topCategory in topCategories)
+                                        {
+                                            <div class="d-flex justify-content-between">
+                                                <span>@topCategory.Name</span>
+                                                <span class="badge bg-info">@topCategory.Products.Count products</span>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="fas fa-tags fa-3x text-muted mb-3"></i>
+                            <h4 class="text-muted">No categories found</h4>
+                            <p class="text-muted">Get started by creating your first product category.</p>
+                            <a asp-action="Create" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Create First Category
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-hide alerts after 5 seconds
+        setTimeout(function() {
+            $('.alert').fadeOut('slow');
+        }, 5000);
+    </script>
+}

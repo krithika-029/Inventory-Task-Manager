@@ -1,0 +1,234 @@
+@model InventoryTaskManager.Models.Category
+
+@{
+    ViewData["Title"] = "Delete Category";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="text-danger">Delete Category</h2>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Categories
+                </a>
+            </div>
+
+            <div class="alert alert-danger" role="alert">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>Warning!</strong> Are you sure you want to delete this category?
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header bg-danger text-white">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-trash"></i> Category to be Deleted
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <strong>Category Name:</strong>
+                                </div>
+                                <div class="col-sm-9">
+                                    @Model.Name
+                                </div>
+                            </div>
+                            <hr>
+                            
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <strong>Description:</strong>
+                                </div>
+                                <div class="col-sm-9">
+                                    @if (!string.IsNullOrEmpty(Model.Description))
+                                    {
+                                        @Model.Description
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No description</span>
+                                    }
+                                </div>
+                            </div>
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <strong>Products in Category:</strong>
+                                </div>
+                                <div class="col-sm-9">
+                                    <span class="@(Model.Products.Any() ? "text-danger fw-bold" : "text-success")">
+                                        @Model.Products.Count products
+                                    </span>
+                                </div>
+                            </div>
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <strong>Total Inventory Value:</strong>
+                                </div>
+                                <div class="col-sm-9">
+                                    <span class="fs-5 text-success fw-bold">@Model.Products.Sum(p => p.StockValue).ToString("C")</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header bg-warning text-dark">
+                            <h6 class="card-title mb-0">
+                                <i class="fas fa-info-circle"></i> Deletion Impact
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            @if (Model.Products.Any())
+                            {
+                                <div class="alert alert-danger" role="alert">
+                                    <strong>Cannot Delete!</strong>
+                                    <ul class="mt-2 mb-0">
+                                        <li>This category contains <strong>@Model.Products.Count product(s)</strong></li>
+                                        <li>Total inventory value: <strong>@Model.Products.Sum(p => p.StockValue).ToString("C")</strong></li>
+                                        <li>Remove all products from this category before deletion</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="alert alert-info" role="alert">
+                                    <strong>Products in this category:</strong>
+                                    <ul class="mt-2 mb-0">
+                                        @foreach (var product in Model.Products.Take(5))
+                                        {
+                                            <li>@product.Name</li>
+                                        }
+                                        @if (Model.Products.Count > 5)
+                                        {
+                                            <li><em>... and @(Model.Products.Count - 5) more</em></li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-warning" role="alert">
+                                    <strong>What will happen:</strong>
+                                    <ul class="mt-2 mb-0">
+                                        <li>Category will be permanently removed</li>
+                                        <li>All category data will be lost</li>
+                                        <li>This action cannot be undone</li>
+                                    </ul>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">Record Information</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-2">
+                                <div class="col-sm-5">
+                                    <small class="text-muted">Created:</small>
+                                </div>
+                                <div class="col-sm-7">
+                                    <small>@Model.CreatedDate.ToString("MMM dd, yyyy")</small>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-sm-5">
+                                    <small class="text-muted">Last Updated:</small>
+                                </div>
+                                <div class="col-sm-7">
+                                    <small>@Model.UpdatedDate.ToString("MMM dd, yyyy")</small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <small class="text-muted">Category ID:</small>
+                                </div>
+                                <div class="col-sm-7">
+                                    <small><code>@Model.Id</code></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            @if (Model.Products.Any())
+                            {
+                                <div class="text-center">
+                                    <div class="alert alert-danger" role="alert">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <strong>Deletion Not Allowed:</strong> This category contains products and cannot be deleted.
+                                    </div>
+                                    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-info">
+                                        <i class="fas fa-eye"></i> View Category Details
+                                    </a>
+                                    <a asp-action="Products" asp-route-id="@Model.Id" class="btn btn-primary ms-2">
+                                        <i class="fas fa-box"></i> Manage Products
+                                    </a>
+                                    <a asp-action="Index" class="btn btn-secondary ms-2">
+                                        <i class="fas fa-times"></i> Cancel
+                                    </a>
+                                </div>
+                            }
+                            else
+                            {
+                                <form asp-action="Delete">
+                                    <input type="hidden" asp-for="Id" />
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="confirmDeletion" required>
+                                                <label class="form-check-label" for="confirmDeletion">
+                                                    I understand that this action cannot be undone and confirm that I want to permanently delete this category.
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 text-end">
+                                            <button type="submit" class="btn btn-danger" id="deleteButton" disabled>
+                                                <i class="fas fa-trash"></i> Delete Category
+                                            </button>
+                                            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-info ms-2">
+                                                <i class="fas fa-eye"></i> View Details
+                                            </a>
+                                            <a asp-action="Index" class="btn btn-secondary ms-2">
+                                                <i class="fas fa-times"></i> Cancel
+                                            </a>
+                                        </div>
+                                    </div>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Enable/disable delete button based on confirmation checkbox
+        document.getElementById('confirmDeletion')?.addEventListener('change', function() {
+            document.getElementById('deleteButton').disabled = !this.checked;
+        });
+
+        // Add confirmation dialog
+        document.querySelector('form')?.addEventListener('submit', function(e) {
+            if (!confirm('Are you absolutely sure you want to delete this category? This action cannot be undone.')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+}

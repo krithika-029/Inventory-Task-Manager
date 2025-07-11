@@ -1,0 +1,211 @@
+@model InventoryTaskManager.Models.TaskItem
+
+@{
+    ViewData["Title"] = "Create Task";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Create New Task</h2>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Tasks
+                </a>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Task Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <form asp-action="Create">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                
+                                <div class="form-group mb-3">
+                                    <label asp-for="Title" class="form-label"></label>
+                                    <input asp-for="Title" class="form-control" placeholder="Enter task title" />
+                                    <span asp-validation-for="Title" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label asp-for="Description" class="form-label"></label>
+                                    <textarea asp-for="Description" class="form-control" rows="4" placeholder="Enter task description (optional)"></textarea>
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group mb-3">
+                                            <label asp-for="Status" class="form-label"></label>
+                                            <select asp-for="Status" class="form-select">
+<option value="@InventoryTaskManager.Models.TaskStatus.Pending">Pending</option>
+<option value="@InventoryTaskManager.Models.TaskStatus.InProgress">In Progress</option>
+<option value="@InventoryTaskManager.Models.TaskStatus.Completed">Completed</option>
+                                            </select>
+                                            <span asp-validation-for="Status" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group mb-3">
+                                            <label asp-for="Priority" class="form-label"></label>
+                                            <select asp-for="Priority" class="form-select">
+<option value="@InventoryTaskManager.Models.TaskPriority.Low">Low</option>
+<option value="@InventoryTaskManager.Models.TaskPriority.Medium" selected>Medium</option>
+<option value="@InventoryTaskManager.Models.TaskPriority.High">High</option>
+<option value="@InventoryTaskManager.Models.TaskPriority.Critical">Critical</option>
+                                            </select>
+                                            <span asp-validation-for="Priority" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group mb-3">
+                                            <label asp-for="DueDate" class="form-label"></label>
+                                            <input asp-for="DueDate" type="date" class="form-control" />
+                                            <span asp-validation-for="DueDate" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label asp-for="AssignedTo" class="form-label"></label>
+                                    <input asp-for="AssignedTo" class="form-control" placeholder="Enter person or department name (optional)" />
+                                    <span asp-validation-for="AssignedTo" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group mt-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> Create Task
+                                    </button>
+                                    <a asp-action="Index" class="btn btn-secondary ms-2">
+                                        <i class="fas fa-times"></i> Cancel
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">Task Guidelines</h6>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="fas fa-info-circle text-info"></i>
+                                    <strong>Title:</strong> Use clear, action-oriented titles
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-align-left text-primary"></i>
+                                    <strong>Description:</strong> Add details about what needs to be done
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-calendar text-warning"></i>
+                                    <strong>Due Date:</strong> Set realistic deadlines
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-exclamation-triangle text-danger"></i>
+                                    <strong>Priority:</strong> Use priority levels to organize work
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-user text-success"></i>
+                                    <strong>Assignment:</strong> Specify who's responsible
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">Priority Levels</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <span class="badge bg-success">Low</span>
+                                <small class="text-muted ms-2">Can be done when time allows</small>
+                            </div>
+                            <div class="mb-2">
+                                <span class="badge bg-info">Medium</span>
+                                <small class="text-muted ms-2">Normal priority tasks</small>
+                            </div>
+                            <div class="mb-2">
+                                <span class="badge bg-warning">High</span>
+                                <small class="text-muted ms-2">Important, should be done soon</small>
+                            </div>
+                            <div class="mb-2">
+                                <span class="badge bg-danger">Critical</span>
+                                <small class="text-muted ms-2">Urgent, needs immediate attention</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">Status Options</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <span class="badge bg-warning">Pending</span>
+                                <small class="text-muted ms-2">Not yet started</small>
+                            </div>
+                            <div class="mb-2">
+                                <span class="badge bg-info">In Progress</span>
+                                <small class="text-muted ms-2">Currently being worked on</small>
+                            </div>
+                            <div class="mb-2">
+                                <span class="badge bg-success">Completed</span>
+                                <small class="text-muted ms-2">Task finished</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">Quick Date Options</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="setDueDate(1)">
+                                    Tomorrow
+                                </button>
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="setDueDate(7)">
+                                    1 Week
+                                </button>
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="setDueDate(30)">
+                                    1 Month
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        // Set due date based on days from today
+        function setDueDate(days) {
+            var today = new Date();
+            var dueDate = new Date(today.getTime() + (days * 24 * 60 * 60 * 1000));
+            var dueDateString = dueDate.getFullYear() + '-' + 
+                               String(dueDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                               String(dueDate.getDate()).padStart(2, '0');
+            document.getElementById('DueDate').value = dueDateString;
+        }
+
+        // Set default due date to 7 days from now
+        $(document).ready(function() {
+            if (!$('#DueDate').val()) {
+                setDueDate(7);
+            }
+        });
+    </script>
+}
